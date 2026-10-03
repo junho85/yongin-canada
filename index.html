@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>용인의 캐나다, 명수당</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mist:#E9EFEC;      /* 아침 호수 안개 */
+  --paper:#F7FAF8;
+  --spruce:#1E3A32;    /* 메타세쿼이아 그늘 */
+  --ink:#16231F;
+  --lake:#4F7480;      /* 명수당 수면 */
+  --rust:#A5532A;      /* 11월 메타세쿼이아 잎 */
+  --maple:#B42A22;     /* 단풍 */
+  --line:#C9D6D1;
+  --muted:#52635D;
+  --warn-bg:#FBF1E6;
+  --ok:#2F6B4F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --mist:#0F1A17; --paper:#15221E; --spruce:#9CC5B5; --ink:#E4ECE8;
+    --lake:#8DB3BF; --rust:#E08A5A; --maple:#F0675C; --line:#2C3D37;
+    --muted:#9FB1AA; --warn-bg:#2A2018; --ok:#7CC6A0;
+  }
+}
+:root[data-theme="dark"]{
+  --mist:#0F1A17; --paper:#15221E; --spruce:#9CC5B5; --ink:#E4ECE8;
+  --lake:#8DB3BF; --rust:#E08A5A; --maple:#F0675C; --line:#2C3D37;
+  --muted:#9FB1AA; --warn-bg:#2A2018; --ok:#7CC6A0;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--mist); color:var(--ink);
+  font-family:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;
+  font-size:16px; line-height:1.7; word-break:keep-all;
+}
+a{color:var(--lake); text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--rust); outline-offset:2px}
+h1,h2,h3{font-family:"Gowun Batang",serif; font-weight:700; line-height:1.3; margin:0}
+.wrap{max-width:860px; margin:0 auto; padding:0 16px}
+
+/* ---------- hero: 나무 줄기 + 수면 반사 ---------- */
+.hero{position:relative; overflow:hidden; background:var(--spruce); color:#F2F6F4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero{background:#0B1512}}
+:root[data-theme="dark"] .hero{background:#0B1512}
+.forest{display:block; width:100%; height:220px}
+.hero .wrap{position:relative; padding-top:8px; padding-bottom:40px}
+.hero h1{font-size:clamp(2.2rem,7vw,3.6rem); letter-spacing:-.01em}
+.hero .real{font-size:1.15rem; margin:.4rem 0 0; color:#CFE0D9}
+.hero .addr{margin:1rem 0 0; font-size:.95rem; color:#AFC6BD}
+.hero .addr b{color:#F2F6F4; font-weight:500}
+
+/* ---------- 오늘 판정 ---------- */
+.verdict{background:var(--paper); border:1px solid var(--line); border-radius:14px; margin-top:-24px; position:relative; padding:22px 20px 18px}
+.verdict h2{font-size:1.35rem}
+.verdict .when{color:var(--muted); font-size:.9rem; margin:.2rem 0 1rem}
+.v-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px 22px}
+.v-item dt{font-size:.85rem; color:var(--muted)}
+.v-item dd{margin:0; font-weight:600}
+.v-item dd small{display:block; font-weight:400; color:var(--muted); font-size:.85rem; line-height:1.5}
+.yes{color:var(--ok)}
+.caution{margin-top:16px; background:var(--warn-bg); border-left:4px solid var(--rust); padding:12px 14px; border-radius:0 8px 8px 0; font-size:.95rem}
+
+/* ---------- 계절 띠 ---------- */
+.season{margin:44px 0 0}
+.season h2{font-size:1.25rem}
+.season p.lead{margin:.3rem 0 1.1rem; color:var(--muted); font-size:.95rem}
+.strip{position:relative; height:118px}
+.strip .track{position:absolute; left:0; right:0; top:58px; height:10px; border-radius:5px; background:var(--line)}
+.band{position:absolute; height:10px; top:58px; border-radius:5px}
+.band.exam{background:repeating-linear-gradient(45deg,var(--muted) 0 4px,transparent 4px 8px); opacity:.6}
+.band.maple{background:var(--maple); top:72px; height:8px}
+.band.meta{background:var(--rust); top:84px; height:8px}
+.tick{position:absolute; top:0; transform:translateX(-50%); font-size:.78rem; color:var(--muted); white-space:nowrap}
+.today{position:absolute; top:22px; height:52px; width:2px; background:var(--ink)}
+.today span{position:absolute; top:-2px; left:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
+.legend{display:flex; flex-wrap:wrap; gap:6px 18px; font-size:.85rem; color:var(--muted); margin-top:4px}
+.legend i{display:inline-block; width:14px; height:8px; border-radius:3px; margin-right:6px; vertical-align:middle}
+
+/* ---------- 본문 섹션 ---------- */
+section.block{margin-top:52px}
+section.block > h2{font-size:1.5rem; padding-bottom:8px; border-bottom:2px solid var(--spruce)}
+section.block > p.lead{color:var(--muted); margin:.6rem 0 0}
+h3{font-size:1.1rem; margin:1.6rem 0 .5rem}
+ul.plain{padding-left:1.1rem; margin:.4rem 0}
+ul.plain li{margin:.25rem 0}
+.tbl{width:100%; border-collapse:collapse; font-size:.93rem; margin-top:.6rem}
+.tbl th,.tbl td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+.tbl th{font-weight:600; color:var(--muted); font-size:.85rem}
+.tbl td:first-child{font-weight:600; white-space:nowrap}
+.scroll{overflow-x:auto}
+.note{font-size:.85rem; color:var(--muted); margin-top:.5rem}
+
+.spots{display:grid; gap:18px; margin-top:1rem}
+.spot{display:grid; grid-template-columns:64px 1fr; gap:14px; align-items:start}
+.spot svg{width:64px; height:64px}
+.spot h3{margin:0 0 .2rem}
+.spot p{margin:0; font-size:.95rem}
+
+.food{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px 24px; margin-top:.6rem}
+.food h3{margin-top:1rem}
+.food ul{list-style:none; padding:0; margin:0}
+.food li{padding:8px 0; border-bottom:1px dashed var(--line)}
+.food li b{font-weight:600}
+.food li span{display:block; font-size:.85rem; color:var(--muted)}
+
+.pack{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+@media (max-width:620px){.pack{grid-template-columns:1fr}}
+.pack ul{list-style:none; padding:0; margin:.4rem 0 0}
+.pack li{padding:7px 0 7px 28px; position:relative; border-bottom:1px solid var(--line)}
+.pack .bring li::before{content:"✓"; position:absolute; left:4px; color:var(--ok); font-weight:700}
+.pack .leave li::before{content:"✕"; position:absolute; left:4px; color:var(--maple); font-weight:700}
+.pack h3{margin-top:.8rem}
+
+footer{margin:64px 0 0; padding:28px 0 48px; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted)}
+footer ol{padding-left:1.2rem}
+footer li{margin:.2rem 0; overflow-wrap:anywhere}
+.theme-btn{position:absolute; top:12px; right:12px; background:rgba(255,255,255,.12); color:#F2F6F4; border:1px solid rgba(255,255,255,.3); border-radius:999px; padding:4px 12px; font:inherit; font-size:.8rem; cursor:pointer}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <button class="theme-btn" id="themeBtn" type="button" aria-label="밝은/어두운 화면 전환">화면 전환</button>
+  <!-- 메타세쿼이아 줄기와 호수 반사. 장식이 아니라 장소 자체의 실루엣이다 -->
+  <svg class="forest" viewBox="0 0 860 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2C5247"/><stop offset="1" stop-color="#1E3A32"/>
+      </linearGradient>
+      <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4F7480" stop-opacity=".55"/><stop offset="1" stop-color="#1E3A32" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <rect width="860" height="220" fill="url(#sky)"/>
+    <g id="trees"></g>
+    <rect y="170" width="860" height="50" fill="url(#water)"/>
+    <g id="reflect" opacity=".22" transform="translate(0,340) scale(1,-1)"></g>
+  </svg>
+  <div class="wrap">
+    <h1>용인의 캐나다</h1>
+    <p class="real">한국외국어대학교 글로벌캠퍼스 명수당과 메타세쿼이아 길</p>
+    <p class="addr"><b>경기 용인시 처인구 모현읍 외대로 81</b><br>입장 무료. 주차는 유료(일 최대 2만 원).</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="verdict" aria-labelledby="v-title">
+    <h2 id="v-title">오늘 가도 될까</h2>
+    <p class="when">2026년 10월 3일 토요일, 개천절 기준으로 정리했다.</p>
+    <dl class="v-grid">
+      <div class="v-item"><dt>입장</dt><dd class="yes">들어갈 수 있다<small>대학 캠퍼스라 별도 매표 없이 개방된다. 다만 학교가 공지한 공식 개방시간과 오늘 교내 행사나 시험으로 인한 통제 여부는 찾지 못했다.</small></dd></div>
+      <div class="v-item"><dt>날씨</dt><dd>맑음, 7~20°C<small>강수확률 0%. 아침저녁 일교차가 13도다. 내일(10/4)은 강수확률 54%.</small></dd></div>
+      <div class="v-item"><dt>해 지는 시각</dt><dd>18:11<small>명수당은 밤에 조명이 없다. 17시 30분쯤 나오는 게 안전하다.</small></dd></div>
+      <div class="v-item"><dt>지금 출발하면</dt><dd>14시 전후 도착<small>서울에서 버스로 70~90분, 차로는 연휴 정체를 감안해야 한다. 3시간 남짓 머물 수 있다.</small></dd></div>
+    </dl>
+    <div class="caution">
+      <b>오늘은 단풍이 아니다.</b> 「캐나다 같다」는 사진은 대부분 10월 말에서 11월 사이 붉게 물든 메타세쿼이아다. 지금은 초록 숲길과 호수를 보러 가는 산책이다. 10/3~10/5가 3일 연휴(10/5 대체휴일)라 주차장이 붐빌 수 있다.
+    </div>
+  </section>
+
+  <section class="season" aria-labelledby="s-title">
+    <h2 id="s-title">언제 가야 캐나다처럼 보이나</h2>
+    <p class="lead">10월 1일부터 11월 30일까지. 블로그와 기사에 나온 절정 시기를 겹쳐 그렸다.</p>
+    <div class="strip" role="img" aria-label="10월 3일 오늘은 단풍 시작 전이다. 단풍 절정은 10월 말에서 11월 중순, 메타세쿼이아는 11월 중순에서 말이 절정이다. 10월 20일부터 26일은 중간고사 기간이다.">
+      <span class="tick" style="left:0%;transform:none">10/1</span>
+      <span class="tick" style="left:31.1%">10/20</span>
+      <span class="tick" style="left:50.8%">11/1</span>
+      <span class="tick" style="left:100%;transform:translateX(-100%)">11/30</span>
+      <div class="track"></div>
+      <div class="band exam" style="left:31.1%;width:11.5%"></div>
+      <div class="band maple" style="left:39.3%;width:34.4%"></div>
+      <div class="band meta" style="left:65.6%;width:34.4%"></div>
+      <div class="today" style="left:3.3%"><span>오늘 10/3</span></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--maple)"></i>단풍 절정 (10월 말~11월 중순)</span>
+      <span><i style="background:var(--rust)"></i>메타세쿼이아 절정 (11월 중순~말)</span>
+      <span><i style="background:repeating-linear-gradient(45deg,var(--muted) 0 3px,transparent 3px 6px)"></i>중간고사 10/20~26, 피하는 게 좋다</span>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="go-title">
+    <h2 id="go-title">가는 방법</h2>
+
+    <h3>자가용</h3>
+    <ul class="plain">
+      <li>내비게이션에 <b>한국외국어대학교 글로벌캠퍼스</b> 또는 <b>외대로 81</b>을 넣는다.</li>
+      <li>주차는 15분 미만 무료, 이후 10분당 500원, 하루 최대 20,000원이다.</li>
+      <li>대로변 주차는 금지다. 캠퍼스 안 주차장을 쓴다.</li>
+    </ul>
+
+    <h3>버스 (학교 공식 안내)</h3>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr><th>번호</th><th>출발지와 경로</th><th>걸리는 시간</th></tr></thead>
+      <tbody>
+        <tr><td>1117</td><td>강변역 테크노마트 → 잠실역 → 가락시장 → 복정역 → 모란역 → 한국외대</td><td>잠실역에서 약 70분, 모란역에서 약 40분</td></tr>
+        <tr><td>1005</td><td>강남역 → 양재역 → 경부고속도로 → 학교</td><td>강남역에서 80~90분</td></tr>
+        <tr><td>1150</td><td>서울역 → 종로2가 → 판교IC → 학교</td><td>안내 없음</td></tr>
+        <tr><td>1500-2</td><td>사당역 3번 출구 → 남부터미널 → 이매촌 한신아파트 → 한국외대</td><td>사당역에서 약 70분</td></tr>
+        <tr><td>1113</td><td>천호역 → 강동역 → 길동사거리 → 광주IC → 한국외대 사거리</td><td>안내 없음</td></tr>
+        <tr><td>1303</td><td>안양에서 외대행 직행</td><td>안내 없음</td></tr>
+        <tr><td>60</td><td>수원역 → 경기대 후문 → 능골삼거리 → 한국외대 사거리</td><td>오리역에서 약 40분</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <ul class="plain" style="margin-top:.8rem">
+      <li>1005, 1117, 1150, 1303번은 모현사거리에서 교내 공학관까지 무료로 탈 수 있다. <b>1500-2번은 무료 구간에서 빠진다.</b></li>
+      <li>정문 쪽 하차 정류장은 <b>외대도서관앞</b>이다. 정문까지 걸어서 1분이다.</li>
+      <li>정류장 출구 번호나 공휴일 배차는 지도앱에서 다시 확인한다. 학교 안내 페이지는 작성 시점이 적혀 있지 않다.</li>
+    </ul>
+  </section>
+
+  <section class="block" aria-labelledby="fee-title">
+    <h2 id="fee-title">입장료</h2>
+    <p class="lead">없다. 캠퍼스 산책이라 드는 돈은 주차비와 교통비뿐이다.</p>
+  </section>
+
+  <section class="block" aria-labelledby="photo-title">
+    <h2 id="photo-title">사진 찍기 좋은 곳</h2>
+    <div class="spots">
+      <div class="spot">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="var(--spruce)"><path d="M10 58 16 8 22 58z"/><path d="M26 58 32 4 38 58z"/><path d="M42 58 48 8 54 58z"/></g><rect x="0" y="58" width="64" height="2" fill="var(--rust)"/></svg>
+        <div><h3>망각의 숲</h3><p>교양관과 명수당을 잇는 메타세쿼이아 길이다. 나무가 한 줄로 늘어서 있어 길 한가운데에서 소실점을 잡으면 된다. 시험 기간에 지나가면 외운 게 잊힌다는 학생들 농담에서 이름이 붙었다.</p></div>
+      </div>
+      <div class="spot">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="44" rx="28" ry="10" fill="var(--lake)" opacity=".7"/><path d="M14 40 18 18 22 40z M42 40 46 14 50 40z" fill="var(--spruce)"/><path d="M14 48 18 62 22 48z M42 48 46 64 50 48z" fill="var(--spruce)" opacity=".35"/></svg>
+        <div><h3>명수당 호수</h3><p>숲길 끝에 나오는 작은 호수다. 물가에서 나무와 수면 반영을 함께 담는 구도가 가장 많이 올라온다. 오리가 산다.</p></div>
+      </div>
+      <div class="spot">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="24" width="40" height="30" fill="none" stroke="var(--spruce)" stroke-width="3"/><path d="M8 26 32 8 56 26" fill="none" stroke="var(--spruce)" stroke-width="3"/><rect x="28" y="38" width="8" height="16" fill="var(--rust)"/></svg>
+        <div><h3>호수 너머 유럽풍 건물</h3><p>호수 건너편에 보이는 건물을 배경으로 넣으면 외국 캠퍼스 같은 사진이 나온다. 「캐나다」라는 별명이 여기서 나왔다.</p></div>
+      </div>
+    </div>
+    <p class="note">명수당 앞 잔디밭은 출입 금지다. 잔디에 들어가지 말고 길에서 찍는다. 학생들이 공부하는 공간이니 건물 안 촬영은 피한다.</p>
+  </section>
+
+  <section class="block" aria-labelledby="food-title">
+    <h2 id="food-title">주변에서 먹을 곳</h2>
+    <p class="lead">정문 앞은 블루스퀘어 주차장 주변 정보, 모현읍은 식신 목록에서 이름과 메뉴를 확인했다. 맛 평가와 공휴일 영업은 확인하지 않았으니 지도앱에서 본다.</p>
+    <div class="food">
+      <div>
+        <h3>캠퍼스 주차장 근처 (걸어서 3~6분)</h3>
+        <ul>
+          <li><a href="https://map.naver.com/p/search/까르보네%20한국외국어대점" target="_blank" rel="noopener"><b>까르보네 한국외국어대점</b></a><span>도보 약 3분</span></li>
+          <li><a href="https://map.naver.com/p/search/쿠킹마마%20한국외대" target="_blank" rel="noopener"><b>쿠킹마마</b></a><span>도보 약 5분</span></li>
+          <li><a href="https://map.naver.com/p/search/헬로밀%20한국외대" target="_blank" rel="noopener"><b>헬로밀</b></a><span>도보 약 5분</span></li>
+          <li><a href="https://map.naver.com/p/search/그라찌에%20한국외대" target="_blank" rel="noopener"><b>그라찌에</b></a><span>카페, 도보 약 5분</span></li>
+          <li><a href="https://map.naver.com/p/search/비틀주스%20한국외대%20글로벌캠퍼스" target="_blank" rel="noopener"><b>비틀주스</b></a><span>카페, 주차장에서 도보 약 6분</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>모현읍 (차로 이동)</h3>
+        <ul>
+          <li><a href="https://map.naver.com/p/search/풍미정%20모현" target="_blank" rel="noopener"><b>풍미정</b></a><span>약오리탕, 오리훈제찜</span></li>
+          <li><a href="https://map.naver.com/p/search/외할머니집%20모현" target="_blank" rel="noopener"><b>외할머니집</b></a><span>청국장, 콩나물밥, 제육볶음</span></li>
+          <li><a href="https://map.naver.com/p/search/황소고집%20모현" target="_blank" rel="noopener"><b>황소고집</b></a><span>갈매기살, 생삼겹살 같은 고기구이</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">정문에서 1km쯤 떨어진 모현사거리(외대사거리)에 음식점, 카페, 편의점이 모여 있다. 캠퍼스 안에서는 음식을 먹을 수 없으니 식사는 밖에서 해결한다.</p>
+  </section>
+
+  <section class="block" aria-labelledby="pack-title">
+    <h2 id="pack-title">챙길 것, 두고 갈 것</h2>
+    <p class="lead">흔한 나들이 준비물 상당수가 여기서는 금지다.</p>
+    <div class="pack">
+      <div class="bring">
+        <h3>챙길 것</h3>
+        <ul>
+          <li>얇은 겉옷 (아침 7°C, 낮 20°C)</li>
+          <li>걷기 편한 신발</li>
+          <li>휴대폰 보조배터리</li>
+          <li>쓰레기 담아 올 봉투</li>
+          <li>주차비 (최대 2만 원)</li>
+        </ul>
+      </div>
+      <div class="leave">
+        <h3>두고 갈 것</h3>
+        <ul>
+          <li>반려견</li>
+          <li>도시락, 김밥, 과일, 과자, 빵</li>
+          <li>술</li>
+          <li>돗자리, 그늘막, 간이의자</li>
+          <li>킥보드 같은 탈것</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">생수 반입이 되는지, 삼각대를 써도 되는지는 출처에서 확인하지 못했다. 현장 안내판을 따른다.</p>
+  </section>
+
+  <section class="block" aria-labelledby="etc-title">
+    <h2 id="etc-title">알고 가면 좋은 것</h2>
+    <ul class="plain">
+      <li>여기는 관광지가 아니라 수업하는 학교다. 방문객이 늘면서 학생 휴게 공간을 차지하거나 화장실이 더러워진다는 불만이 기사로 나왔다(2024-11). 조용히 걷고 오면 된다.</li>
+      <li>학교는 2025년 10월에 「다음 봄 학기부터 명수당 일대 CCTV 추가, 주차 질서 개선, 반려동물 출입 구역 제한」을 예고했다. 2026년 지금 실제로 시행됐는지는 확인하지 못했다. 현장 안내판을 따른다.</li>
+      <li>단풍 시즌에 다시 간다면 중간고사(10/20~26)를 피하고 10월 말에서 11월 중순 사이 평일 오전이 낫다.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>2026-10-03 12시 기준으로 웹 검색과 기상 예보(Open-Meteo)를 모아 정리했다. 날짜가 적힌 출처는 그 시점 정보다.</p>
+    <ol>
+      <li><a href="https://www.ardentnews.co.kr/news/articleView.html?idxno=8390">아던트뉴스, 「한국의 캐나다 공원이라 부를만하네」(2025-10-30)</a> 주소, 입장료, 주차요금, 버스, 금지 규정</li>
+      <li><a href="https://v.daum.net/v/1aW6m9vmex">다음, 「가보면 왜 캐나다 닮았다는지 알아요」(2025-11-04)</a></li>
+      <li><a href="https://www.thetrippick.com/news/articleView.html?idxno=1625">여행픽, 「인스타 성지 된 명수당」(2025-10-26)</a> 학교의 다음 학기 조치 예고</li>
+      <li><a href="https://www.kihoilbo.co.kr/news/articleView.html?idxno=1119192">기호일보, 「한국외대 명수당 SNS 인증샷 명소 불편한 유명세」(2024-11-15)</a></li>
+      <li><a href="https://builder.hufs.ac.kr/user/hufs/campusMap/map_pop02.html">한국외대, 대중교통을 이용하여 오는 방법 (작성일 미상)</a></li>
+      <li><a href="https://namu.wiki/w/%ED%95%9C%EA%B5%AD%EC%99%B8%EA%B5%AD%EC%96%B4%EB%8C%80%ED%95%99%EA%B5%90/%EA%B8%80%EB%A1%9C%EB%B2%8C%EC%BA%A0%ED%8D%BC%EC%8A%A4">나무위키, 한국외국어대학교/글로벌캠퍼스</a> 망각의 숲, 야간 조명, 모현사거리 상권</li>
+      <li><a href="https://kr.trip.com/moments/detail/yongin-si-14748-138108028/">트립닷컴, 단풍명소 한국 속 캐나다 공원</a> 절정 시기</li>
+      <li><a href="https://bluesquare.app/parking/43571/">블루스퀘어, 글로벌캠퍼스 주차장 주변</a> 주차장 근처 식당과 카페, 도보 거리</li>
+      <li><a href="https://www.siksinhot.com/taste?areaNo=3766">식신, 모현읍 맛집</a> 모현읍 식당 이름과 메뉴</li>
+      <li><a href="https://www.hufs.ac.kr/hufs/11360/subview.do">한국외대 학사정보</a> 2학기 중간고사 10/20~26</li>
+      <li><a href="https://open-meteo.com/">Open-Meteo</a> 10/3~10/4 예보, 일출 일몰</li>
+    </ol>
+  </footer>
+</main>
+
+<script>
+// 메타세쿼이아 줄기 실루엣을 그린다. 높이와 간격만 조금씩 다르게
+(function(){
+  var g=document.getElementById('trees'), r=document.getElementById('reflect');
+  var ns='http://www.w3.org/2000/svg', seed=7;
+  function rnd(){seed=(seed*9301+49297)%233280; return seed/233280;}
+  var x=-10;
+  while(x<880){
+    var h=110+rnd()*60, w=14+rnd()*10, top=170-h;
+    var d='M'+(x)+' 170 L'+(x+w/2)+' '+top+' L'+(x+w)+' 170Z';
+    [g,r].forEach(function(p){
+      var t=document.createElementNS(ns,'path'); t.setAttribute('d',d);
+      t.setAttribute('fill', p===g ? '#16302A' : '#4F7480'); p.appendChild(t);
+    });
+    x+=w+10+rnd()*22;
+  }
+})();
+// 밝은/어두운 화면 전환 (이 브라우저에만 저장)
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  try{var s=localStorage.getItem('msd-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('msd-theme',next);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
